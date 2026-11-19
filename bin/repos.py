@@ -47,6 +47,18 @@ def covered_repos():
     return [root] if root else child_repos(d)
 
 
+def fetch_default(repo):
+    """Refresh origin/<default>: a fresh cloud clone can hold a stale one, and the gates diff against it."""
+    r = subprocess.run(["git", "-C", repo, "symbolic-ref", "--short", "refs/remotes/origin/HEAD"],
+                       capture_output=True, text=True)
+    branch = r.stdout.strip().split("/", 1)[-1] if r.returncode == 0 else "main"
+    try:
+        subprocess.run(["git", "-C", repo, "fetch", "-q", "origin", branch], capture_output=True, timeout=20,
+                       env=dict(os.environ, GIT_TERMINAL_PROMPT="0"))
+    except subprocess.TimeoutExpired:
+        pass  # offline or slow: keep the old ref, never block the session
+
+
 def hooked_children():
     """Child repos whose own project hooks Claude Code will NOT run (repo-hooks.py runs them)."""
     d = project_dir()

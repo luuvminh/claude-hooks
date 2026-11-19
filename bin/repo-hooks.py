@@ -22,6 +22,10 @@ raw = sys.stdin.read()
 payload = repos.load_json(raw)
 subject = payload.get("tool_name") or payload.get("source") or payload.get("agent_type") or ""
 
+if event == "SessionStart":
+    for repo in repos.covered_repos():
+        repos.fetch_default(repo)
+
 contexts, blocks, merged = [], [], {}
 for repo in repos.hooked_children():
     groups = repos.load_json(repos.settings_text(repo)).get("hooks", {}).get(event, [])

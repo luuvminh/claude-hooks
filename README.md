@@ -8,6 +8,7 @@ Hook chung cho Claude Code của Max, dùng ở mọi dự án, cả cloud lẫn
 | ponytail | mở phiên, mỗi tin, mỗi subagent | bật chế độ ponytail |
 | ponytail-gate | lúc báo xong | chặn một lần nếu code đổi so với nhánh chính mà chưa `/ponytail-review` |
 | impeccable | sửa file, lúc báo xong | quét file giao diện (file khác thì bỏ qua) |
+| repo-hooks | mở phiên | kéo lại nhánh chính của từng repo (bản clone mới trên cloud hay bị cũ, cổng chặn nhầm) |
 | repo-hooks | mọi sự kiện | phiên mở ở thư mục cha (cloud: `/home/user`) thì chạy hook riêng của từng repo con, ví dụ maypiano |
 
 Repo nào đã có sẵn hook cùng tên trong `.claude/settings.json` thì hook chung tự nhường, không chạy hai lần.
@@ -26,6 +27,12 @@ và nối skill vào `~/.claude/skills/` nếu chưa có skill cùng tên. Chạ
 Tự cập nhật: mỗi lần mở phiên (tối đa 6 giờ một lần) hook `self-update.sh` kéo bản mới về và cài lại.
 
 Sau khi duyệt xong: `python3 ~/.claude/claude-hooks/hooks/ponytail-gate.py --stamp` (chạy trong repo, hoặc thư mục cha).
+
+## Kiểm
+
+```bash
+python3 tests/test_fetch.py
+```
 
 ## Gỡ
 
